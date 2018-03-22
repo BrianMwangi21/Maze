@@ -1,5 +1,6 @@
 # Maze solver in Python
 import os
+import time
 
 
 class Point(object):
@@ -53,7 +54,7 @@ class Maze(object):
             print("Maze.txt does not exist")
 
     def print_maze(self):
-        print("Maze >> ")
+        print("\nMaze >> ")
         for row in range(0, self.row_limit):
             print(''.join(self.maze[row]))
 
@@ -68,19 +69,51 @@ class Solver(object):
         # Initialize required coordinates
         self.get_start_and_end()
         self.current_point.init_as_point(self.start_point)
+        self.previous_point.init_as_point(self.start_point)
 
         # Now solve
-        self.print_stats()
+        self.maze_to_solve.print_maze()
         self.solve_maze()
+        print("Maze is done")
 
     def get_start_and_end(self):
         for row in range(0, self.maze_to_solve.row_limit):
             for col in range(0, self.maze_to_solve.col_limit):
                 if self.maze_to_solve.maze[row][col] == "S":
                     self.start_point.init_as_coords(row, col)
+                    break
 
     def solve_maze(self):
-        print("Solver can move to : " + str(self.next_empty_points(self.current_point)))
+        while True:
+            # First get all possible points to move
+            all_possible_moves = self.next_empty_points(self.current_point)
+
+            # Then remove all the previous points from possible moves
+            final_possible_moves = []
+            for pos_p in range(0, len(all_possible_moves)):
+                if all_possible_moves[pos_p].row == self.previous_point.row and all_possible_moves[pos_p].col == self.previous_point.col:
+                    pass
+                else:
+                    final_possible_moves.append(all_possible_moves[pos_p])
+
+            print("Next points                : " + str(final_possible_moves))
+
+            # Loop through the solutions
+            if len(final_possible_moves) == 1:
+                # Move the Solver to the next point
+                self.maze_to_solve.maze[final_possible_moves[0].row][final_possible_moves[0].col] = "S"
+
+                # Make the previous point to be the current point, then make the current point to be the next point
+                self.previous_point.init_as_point(self.current_point)
+                self.current_point.init_as_coords(final_possible_moves[0].row, final_possible_moves[0].col)
+
+                print("Current to become previous : " + str(self.previous_point))
+                print("Next to become current     : " + str(self.current_point))
+
+                self.maze_to_solve.print_maze()
+            else:
+                print("Breaking")
+                break
 
     def next_empty_points(self, point):
         all_empty_points = []
