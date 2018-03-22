@@ -1,6 +1,5 @@
 # Maze solver in Python
 import os
-import time
 from random import randint
 
 # Letters to identify child solvers
@@ -139,7 +138,6 @@ class Solver(object):
                 print("Reached end point for %s" % self.letter_to_use)
                 print(extra_letters)
                 break
-
 
     def next_empty_points(self, point):
         all_empty_points = []
