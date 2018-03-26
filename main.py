@@ -171,7 +171,6 @@ class Solver(object):
     def print_stats(self):
         self.maze_to_solve.print_maze()
         print("Start Point   : " + str(self.start_point))
-        print("Current Point : " + str(self.current_point))
 
 
 # Create new Maze Object
