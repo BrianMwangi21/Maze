@@ -15,6 +15,8 @@ class Solver(object):
     letter_to_use = ""
     see_trail = False
     start_point, current_point, previous_point = Point(), Point(), Point()
+    child_solvers = []
+    steps_made = []
 
     def __init__(self, maze_object: Maze, letter_to_use: str, see_trail: bool):
         self.maze_to_solve = maze_object
@@ -31,6 +33,7 @@ class Solver(object):
 
         self.current_point.init_as_point(self.start_point)
         self.previous_point.init_as_point(self.start_point)
+        self.steps_made.append([self.current_point.row, self.current_point.col])
 
     def solve_maze(self):
         self.maze_to_solve.print_maze()
@@ -57,6 +60,9 @@ class Solver(object):
                 self.previous_point.init_as_point(self.current_point)
                 self.current_point.init_as_coords(final_possible_moves[0].row, final_possible_moves[0].col)
 
+                # Save the next step
+                self.steps_made.append([self.current_point.row, self.current_point.col])
+
                 if not self.see_trail:
                     self.maze_to_solve.maze[self.previous_point.row][self.previous_point.col] = " "
 
@@ -78,8 +84,11 @@ class Solver(object):
                             break
 
                     self.maze_to_solve.maze[final_possible_moves[pos].row][final_possible_moves[pos].col] = selected_letter
+                    self.steps_made.append(["NB", self.letter_to_use ,selected_letter])
                     child_solver = Solver(self.maze_to_solve, selected_letter, self.see_trail)
                     child_solver.solve_maze()
+                    # save child solver
+                    self.child_solvers.append(child_solver)
 
                 break
             else:
@@ -119,3 +128,6 @@ class Solver(object):
     def print_stats(self):
         self.maze_to_solve.print_maze()
         print("Start Point   : " + str(self.start_point))
+
+    def print_route(self):
+        print("Steps used : " + str(self.steps_made))
