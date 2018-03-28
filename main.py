@@ -3,7 +3,7 @@ import os
 from random import randint
 
 # Letters to identify child solvers
-extra_letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o']
+extra_letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
 
 class Point(object):
@@ -13,7 +13,7 @@ class Point(object):
         self.row = 0
         self.col = 0
 
-    def init_as_coords(self, row, col):
+    def init_as_coords(self, row: int, col: int):
         self.row = row
         self.col = col
 
@@ -68,7 +68,7 @@ class Solver(object):
     see_trail = False
     start_point, current_point, previous_point = Point(), Point(), Point()
 
-    def __init__(self, maze_object, letter_to_use, see_trail):
+    def __init__(self, maze_object: Maze, letter_to_use: str, see_trail: bool):
         self.maze_to_solve = maze_object
         self.letter_to_use = letter_to_use
         self.see_trail = see_trail
