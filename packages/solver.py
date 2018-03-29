@@ -84,7 +84,7 @@ class Solver(object):
                             break
 
                     self.maze_to_solve.maze[final_possible_moves[pos].row][final_possible_moves[pos].col] = selected_letter
-                    self.steps_made.append(["NB", self.letter_to_use ,selected_letter])
+                    self.steps_made.append(["NB", self.letter_to_use, selected_letter])
                     child_solver = Solver(self.maze_to_solve, selected_letter, self.see_trail)
                     child_solver.solve_maze()
                     # save child solver
@@ -93,7 +93,6 @@ class Solver(object):
                 break
             else:
                 print("Reached end point for %s" % self.letter_to_use)
-                print(extra_letters)
                 break
 
     def next_empty_points(self, point: Point):
@@ -131,3 +130,27 @@ class Solver(object):
 
     def print_route(self):
         print("Steps used : " + str(self.steps_made))
+
+    def get_route_branches(self):
+        # First entry is the initial Start in file
+        print("--MAZE SOLVER BRANCHES--")
+        print("Start Point: " + str(self.steps_made[0]))
+
+        for route in range(1, len(self.steps_made)):
+            try:
+                if str(self.steps_made[route]).index("NB"):
+                    print("\nBranch : " + str(self.steps_made[route]))
+
+                    # Now loop through the rest of the steps, find branches stemming from same letter
+                    for inner_route in range(route + 1, len(self.steps_made)):
+                        try:
+                            if str(self.steps_made[inner_route]).index("NB"):
+                                route = inner_route + 1
+                                break
+                        except ValueError:
+                            print(str(self.steps_made[inner_route]), end=",")
+
+                    route += 1
+                    break
+            except ValueError:
+                print(str(self.steps_made[route]), end=",")

@@ -8,3 +8,4 @@ if __name__ == "__main__":
     solver = Solver(maze, "S", True)
     solver.solve_maze()
     solver.print_route()
+    solver.get_route_branches()
