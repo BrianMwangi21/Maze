@@ -14,14 +14,16 @@ class Solver(object):
     maze_to_solve = Maze()
     letter_to_use = ""
     see_trail = False
+    reached_end = False
     start_point, current_point, previous_point = Point(), Point(), Point()
     child_solvers = []
     steps_made = []
 
-    def __init__(self, maze_object: Maze, letter_to_use: str, see_trail: bool):
+    def __init__(self, maze_object: Maze, letter_to_use: str, see_trail: bool, new_steps_array):
         self.maze_to_solve = maze_object
         self.letter_to_use = letter_to_use
         self.see_trail = see_trail
+        self.steps_made = new_steps_array
         self.get_start_and_end()
 
     def get_start_and_end(self):
@@ -85,10 +87,11 @@ class Solver(object):
 
                     self.maze_to_solve.maze[final_possible_moves[pos].row][final_possible_moves[pos].col] = selected_letter
                     self.steps_made.append(["NB", self.letter_to_use, selected_letter])
-                    child_solver = Solver(self.maze_to_solve, selected_letter, self.see_trail)
+                    child_solver = Solver(self.maze_to_solve, selected_letter, self.see_trail, [])
                     child_solver.solve_maze()
-                    # save child solver
-                    self.child_solvers.append(child_solver)
+                    # save child solver, if they found the end
+                    if child_solver.reached_end == True:
+                        self.child_solvers.append(child_solver)
 
                 break
             else:
@@ -122,6 +125,10 @@ class Solver(object):
             south_point.init_as_coords(point.row + 1, point.col)
             all_empty_points.append(south_point)
 
+        # Check if the next spot is the End, represented by E
+        if self.maze_to_solve.maze[point.row][point.col - 1 ] == "E" or self.maze_to_solve.maze[point.row - 1 ][point.col] == "E" or self.maze_to_solve.maze[point.row][point.col + 1] == "E" or self.maze_to_solve.maze[point.row + 1][point.col] == "E":
+            self.reached_end = True
+
         return all_empty_points
 
     def print_stats(self):
@@ -129,28 +136,9 @@ class Solver(object):
         print("Start Point   : " + str(self.start_point))
 
     def print_route(self):
-        print("Steps used : " + str(self.steps_made))
+        print("Steps used 0 : " + str(self.steps_made) + " >> by " + self.letter_to_use)
 
-    def get_route_branches(self):
-        # First entry is the initial Start in file
-        print("--MAZE SOLVER BRANCHES--")
-        print("Start Point: " + str(self.steps_made[0]))
+        for i in range(0, len(self.child_solvers) ):
+            print("Steps used " + str(i + 1) + " : " + str(self.child_solvers[i].steps_made) + " >> by " + self.child_solvers[i].letter_to_use)
 
-        for route in range(1, len(self.steps_made)):
-            try:
-                if str(self.steps_made[route]).index("NB"):
-                    print("\nBranch : " + str(self.steps_made[route]))
 
-                    # Now loop through the rest of the steps, find branches stemming from same letter
-                    for inner_route in range(route + 1, len(self.steps_made)):
-                        try:
-                            if str(self.steps_made[inner_route]).index("NB"):
-                                route = inner_route + 1
-                                break
-                        except ValueError:
-                            print(str(self.steps_made[inner_route]), end=",")
-
-                    route += 1
-                    break
-            except ValueError:
-                print(str(self.steps_made[route]), end=",")
