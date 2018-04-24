@@ -7,4 +7,5 @@ if __name__ == "__main__":
     maze = Maze()
     solver = Solver(maze, "S", True, [])
     solver.solve_maze()
-    solver.print_route()
+    solver.print_routes()
+    solver.get_shortest_route()

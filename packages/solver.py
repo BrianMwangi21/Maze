@@ -86,10 +86,9 @@ class Solver(object):
                             break
 
                     self.maze_to_solve.maze[final_possible_moves[pos].row][final_possible_moves[pos].col] = selected_letter
-                    self.steps_made.append(["NB", self.letter_to_use, selected_letter])
                     child_solver = Solver(self.maze_to_solve, selected_letter, self.see_trail, [])
                     child_solver.solve_maze()
-                    # save child solver, if they found the end
+                    # save child solver, if only they found the end
                     if child_solver.reached_end == True:
                         self.child_solvers.append(child_solver)
 
@@ -131,14 +130,32 @@ class Solver(object):
 
         return all_empty_points
 
-    def print_stats(self):
-        self.maze_to_solve.print_maze()
-        print("Start Point   : " + str(self.start_point))
 
-    def print_route(self):
-        print("Steps used 0 : " + str(self.steps_made) + " >> by " + self.letter_to_use)
+    def print_routes(self):
+        print()
+        print("Steps used by " + self.letter_to_use + " : " + str(self.steps_made))
 
         for i in range(0, len(self.child_solvers) ):
-            print("Steps used " + str(i + 1) + " : " + str(self.child_solvers[i].steps_made) + " >> by " + self.child_solvers[i].letter_to_use)
+            print("Steps used by " + self.child_solvers[i].letter_to_use + " : " + str(self.child_solvers[i].steps_made))
+
+    def get_shortest_route(self):
+        shortest_child_length = len(self.child_solvers[0].steps_made)
+        shortest_child_index = 0
+        shortest_route = self.steps_made
+
+        for i in range(1, len(self.child_solvers) ):
+            if len(self.child_solvers[i].steps_made) < shortest_child_length:
+                shortest_child_length = len(self.child_solvers[i].steps_made)
+                shortest_child_index = i
+
+        # Combine start route with child route
+        for i in range(0, len(self.child_solvers[shortest_child_index].steps_made)):
+            shortest_route.append(self.child_solvers[shortest_child_index].steps_made[i])
+        
+        print()
+        print("Shortest C.Index: " + str(shortest_child_index) )
+        print("Shortest Length : " + str(shortest_child_length) )
+        print("Shortest Route  : " + str(shortest_route) )
+        print("Shortest L.Combo: " + self.letter_to_use + " , " + self.child_solvers[shortest_child_index].letter_to_use )
 
 
