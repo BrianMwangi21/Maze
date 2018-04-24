@@ -2,8 +2,6 @@
 Point class.
 Holds the row and col values of the maze
 """
-
-
 class Point(object):
     row, col = 0, 0
 
