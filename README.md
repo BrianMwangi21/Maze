@@ -1,4 +1,19 @@
 # Maze Solver
+
+Edit 1:
+
+The solver now identifies the end of the maze and only saves the routes that actually get there.
+It then shows the shortest route that can be used.
+Now also has command line commands for launch i.e.
+```
+$ python main.py S --trail
+
+// S :- is the letter which in the maze identifies the start
+// --trail :- adds a trail while printing maze. leaving it empty will only show the last points of the solvers
+```
+
+Edit 0:
+
 This is a simple implementation of a Maze Solver in Python.
 
 The Maze itself is made in the text file `maze.txt` and represented as a 2D array in the program.
