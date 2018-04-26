@@ -39,6 +39,7 @@ class Solver(object):
 
     def solve_maze(self):
         self.maze_to_solve.print_maze()
+        
         while True:
             # First get all possible points to move
             all_possible_moves = self.next_empty_points(self.current_point)
@@ -65,6 +66,7 @@ class Solver(object):
                 # Save the next step
                 self.steps_made.append([self.current_point.row, self.current_point.col])
 
+                # Enabling/disabling the trail
                 if not self.see_trail:
                     self.maze_to_solve.maze[self.previous_point.row][self.previous_point.col] = " "
 
